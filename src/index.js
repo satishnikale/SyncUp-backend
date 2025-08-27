@@ -5,6 +5,8 @@ import "dotenv/config";
 import { Server } from "socket.io";
 import cors from "cors";
 import { connectToSocket } from "./controllers/socketManager.js";
+import { MONGODB_URL, PORT } from "./config.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const server = createServer(app);
@@ -17,16 +19,12 @@ app.use(express.json());
 app.use(express.json({ limit: "40kb" }));
 app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "App is running",
-  });
-});
+app.use("/api/v1/user", userRoutes);
 
 async function main() {
   server.listen(app.get("port"));
-  await mongoose.connect(process.env.MONGODB_URL);
+  await mongoose.connect(MONGODB_URL);
   console.log("DB Connected");
-  console.log(`App is running on ${process.env.PORT}`);
+  console.log(`App is running on ${PORT}`);
 }
 main();

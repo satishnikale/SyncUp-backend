@@ -1,10 +1,10 @@
 import { Router } from "express";
+import { signup, signin } from "../controllers/userController.js";
+const userRoutes = Router();
 
-const router = Router();
+userRoutes.route("/signup").post(signup);
+userRoutes.route("/signin").post(signin);
+userRoutes.route("/addToActivity");
+userRoutes.route("/getAllActivity");
 
-router.route("/signup");
-router.route("/signin");
-router.route("/addToActivity");
-router.route("/getAllActivity");
-
-export default router;
+export default userRoutes;
