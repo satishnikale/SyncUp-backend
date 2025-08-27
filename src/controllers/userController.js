@@ -9,8 +9,8 @@ const signup = async (req, res) => {
   const { name, username, password } = req.body;
   try {
     const existingUser = await User.findOne({ username });
-    
-    console.log(existingUser)
+
+    console.log(existingUser);
     if (existingUser) {
       return res
         .status(httpStatus.FOUND)
@@ -47,11 +47,21 @@ const signin = async (req, res) => {
         .status(httpStatus.NOT_FOUND)
         .json({ message: "User Not Found" });
     }
-    if (bcrypt.compare(password, user.password)) {
-      const token = jwt.sign(username, JWT_SECREAT);
+    // incoming data is array of objects
+    if (bcrypt.compare(password, user[0].password)) {
+      const token = jwt.sign(
+        {
+          id: user._id,
+        },
+        JWT_SECREAT
+      );
       return res.status(httpStatus.OK).json({
         message: "Loged in Successfully",
         token: token,
+      });
+    } else {
+      return res.json({
+        message: "Invalide Credeantials",
       });
     }
   } catch (error) {
